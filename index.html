@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Number Display</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="alarm">
+        <form action="">
+            <legend>Alarm</legend>
+            <div class="hour_input" style="margin-bottom: 10px;">
+                <input type="number" id="input_hr" placeholder="hour" name="hours" min="0" max="100">
+            </div>
+            <div class="hour_input">
+                <input type="number" id="input_min" placeholder="minutes" name="minute" min="0" max="100">
+                <p>Set Alarm🔔</p>
+                <p id="showAlarm">00:00:00</p>
+            </div>
+            <button type="button" id="btnAlarm">Save Alarm</button>
+        </form>
+    </div>
+    <div class="clock">
+        <h5>3</h5>
+        <h5>4</h5>
+        <h5>5</h5>
+        <h5>6</h5>
+        <h5>7</h5>
+        <h5>8</h5>
+        <h5>9</h5>
+        <h5>10</h5>
+        <h5>11</h5>
+        <h5>12</h5>
+        <h5>1</h5>
+        <h5>2</h5>
+        <div class="h_hand"></div>
+        <div class="m_hand"></div>
+        <div class="s_hand"></div>
+        <div class="center"></div>
+    </div>
+
+    <audio id="alarmSound" src="./audio/baton.mp3"  style="display: none;"></audio>
+    <script>
+        let alarmTime = {
+            alarm_hour: 0,
+            alarm_min: 0,
+        }
+
+        function setAlarm() {
+            let alarmHour = parseInt(document.getElementById("input_hr").value) || 0;
+            let alarmMinute = parseInt(document.getElementById("input_min").value) || 0;
+            let showAlarmTime = document.getElementById("showAlarm");
+            alarmTime.alarm_hour = alarmHour;
+            alarmTime.alarm_min = alarmMinute;
+            showAlarmTime.innerText = `${alarmHour.toString().padStart(2, '0')}:${alarmMinute.toString().padStart(2, '0')}:00`;
+
+        }
+
+        document.getElementById("btnAlarm").addEventListener("click", setAlarm);
+
+        function playAlarmSound() {
+            let alarmSound = document.getElementById('alarmSound');
+            alarmSound.currentTime = 0; // Reset to the beginning
+            alarmSound.play();
+
+            console.log("Alarm sound started");
+
+            // Stop the sound after 1 minute
+            setTimeout(() => {
+                alarmSound.pause();
+                alarmSound.currentTime = 0; // Reset to the beginning
+                console.log("Alarm sound stopped");
+            }, 60000); // 60,000 millisecond
+        }
+
+        setInterval(() => {
+            let hour = document.getElementsByClassName("h_hand")[0];
+            let minute = document.getElementsByClassName("m_hand")[0];
+            let second = document.getElementsByClassName("s_hand")[0];
+            let d = new Date();
+            let hr = d.getHours();
+            let min = d.getMinutes();
+            let sec = d.getSeconds();
+            let hr_rotation = 30 * hr + min / 2;
+            let min_rotation = 6 * min;
+            let sec_rotation = 6 * sec;
+            hour.style.transform = `rotate(${hr_rotation}deg)`;
+            minute.style.transform = `rotate(${min_rotation}deg)`;
+            second.style.transform = `rotate(${sec_rotation}deg)`;
+
+            if (hr === alarmTime.alarm_hour && min === alarmTime.alarm_min && sec === 0) {
+                // let alarmSound = document.getElementById('alarmSound');
+              
+                //     alarmSound.play();
+                playAlarmSound();
+              
+            }
+        }, 1000);
+
+     
+    </script>
+</body>
+
+</html>
